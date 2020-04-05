@@ -1,0 +1,11 @@
+Package: liba53
+Version: 0.1
+Architecture: amd64
+Essential: no
+Maintainer: Range Networks, Inc. <info@rangenetworks.com>
+Installed-Size: 47
+Depends: libc6, pkg-config
+Section: comm
+Priority: optional
+Homepage: http://www.rangenetworks.com/
+Description: A5/3 call encryption library

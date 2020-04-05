@@ -1,0 +1,2 @@
+/etc/OpenBTS/sipauthserve.example.sql
+/etc/init/sipauthserve.conf

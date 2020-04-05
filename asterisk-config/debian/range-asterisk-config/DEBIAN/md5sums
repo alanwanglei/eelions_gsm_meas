@@ -1,0 +1,9 @@
+e6ae696c17f26a5284797f31e0b03419  usr/share/doc/range-asterisk-config/changelog.gz
+ce8f1fe21a10ad51c467fdb3793b3c39  var/lib/asterisk/sounds/en/AllCircuitsBusy.gsm
+ef83e92d41aebb4218a65863041fb77f  var/lib/asterisk/sounds/en/InsufficientCredit.gsm
+c9ec27f9d6d716434271a86689df5156  var/lib/asterisk/sounds/en/NumberIncorrect.gsm
+13dbaabfc9938637f29d142daf10dbea  var/lib/asterisk/sounds/en/NumberNotInService.gsm
+7613644c021ffc83b93caad54febcf8d  var/lib/asterisk/sounds/en/NumberOutOfCoverage.gsm
+8657a6efc18486f6d8156f6d209a3d2f  var/lib/asterisk/sounds/en/PartyNotAnswering.gsm
+dcf269a0b59037055f1f5d55823de3da  var/lib/asterisk/sounds/en/PartyNotAvailableNow.gsm
+ee1aaf21bf2a3e78cad102dc081e554f  var/lib/asterisk/sounds/en/PartyNotResponding.gsm

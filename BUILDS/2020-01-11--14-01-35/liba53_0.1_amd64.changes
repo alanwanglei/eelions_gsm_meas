@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Wed, 13 Oct 2014 12:42:00 -0700
+Source: liba53
+Binary: liba53
+Architecture: source amd64
+Version: 0.1
+Distribution: unstable
+Urgency: low
+Maintainer: Range Networks, Inc. <info@rangenetworks.com>
+Changed-By: Range Packager <buildmeister@rangenetworks.com>
+Description:
+ liba53     - A5/3 call encryption library
+Changes:
+ liba53 (0.1) unstable; urgency=low
+ .
+     * Initial release
+Checksums-Sha1:
+ 146ea1be58facf723c79105157ece2c772dc328c 561 liba53_0.1.dsc
+ 9279ce3790a819289cef3fafb891bf2aea10df4c 97565 liba53_0.1.tar.gz
+ d7072dfaf3bed072183d1dba232cbd2f91b252a4 11804 liba53_0.1_amd64.deb
+Checksums-Sha256:
+ 86aa1ef8a178ea7d05a75775b4c9c349f52de138cdc48650b6a51755e0338d60 561 liba53_0.1.dsc
+ f41eb475ac1e0861f6da304642571f93f1bae8b0b49d2fd909a27729efa15c3e 97565 liba53_0.1.tar.gz
+ d8f03516a0e18167639423c44c0228f7051812184d66750397de6dabd29b1e0a 11804 liba53_0.1_amd64.deb
+Files:
+ d07278bb1198e1cb2fc97865dd66651e 561 comm optional liba53_0.1.dsc
+ 36c0c72597ce52370da740feab001d39 97565 comm optional liba53_0.1.tar.gz
+ fd096fb6ed4a2053062c480743c7ba66 11804 comm optional liba53_0.1_amd64.deb

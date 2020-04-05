@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Thu, 30 May 2013 00:11:00 -0700
+Source: range-asterisk
+Binary: range-asterisk
+Architecture: source amd64
+Version: 11.7.0.5
+Distribution: unstable
+Urgency: low
+Maintainer: Range Networks, Inc. <info@rangenetworks.com>
+Changed-By: Michael Iedema <michael.iedema@rangenetworks.com>
+Description:
+ range-asterisk - Range Networks - Tested Version of Asterisk
+Changes:
+ range-asterisk (11.7.0.5) unstable; urgency=low
+ .
+     * Test
+Checksums-Sha1:
+ d30ea408183206bc75441a9e50380ce65ba7e2d4 690 range-asterisk_11.7.0.5.dsc
+ 4eb76fa9e2d0878b287e3ddd4d82f68567646308 17387510 range-asterisk_11.7.0.5.tar.gz
+ bc2db7d915075439c45b5a0c4a0435a534968c8f 13061962 range-asterisk_11.7.0.5_amd64.deb
+Checksums-Sha256:
+ 142c4adaf2dcd12981ce4ff571d405ca7e0d4fab1f6af2026946a5a7ca69bb9d 690 range-asterisk_11.7.0.5.dsc
+ cfdeca7712d879191134550010e6a3c5f40832278327e71125f2bb0313fd865b 17387510 range-asterisk_11.7.0.5.tar.gz
+ ca60978fd9e14815d4c3e8bd1cbfacb5542590bfd98e08c2d8fbe3680ddc95cd 13061962 range-asterisk_11.7.0.5_amd64.deb
+Files:
+ 954fc49a800f045655bc33156c4e671c 690 comm optional range-asterisk_11.7.0.5.dsc
+ 145821a6633ad5eb2a71f72ec12d832d 17387510 comm optional range-asterisk_11.7.0.5.tar.gz
+ 5c7674693dbb4b7921de2016b7e15a34 13061962 comm optional range-asterisk_11.7.0.5_amd64.deb

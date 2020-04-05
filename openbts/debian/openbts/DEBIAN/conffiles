@@ -1,0 +1,5 @@
+/etc/OpenBTS/OpenBTS.example.sql
+/etc/OpenBTS/iptables.rules
+/etc/init/openbts.conf
+/etc/logrotate.d/OpenBTS
+/etc/rsyslog.d/OpenBTS.conf

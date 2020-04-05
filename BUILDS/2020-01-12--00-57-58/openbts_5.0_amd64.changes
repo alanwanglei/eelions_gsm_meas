@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Mon, 15 Sep 2014 17:42:42 -0700
+Source: openbts
+Binary: openbts
+Architecture: source amd64
+Version: 5.0
+Distribution: unstable
+Urgency: low
+Maintainer: Range Networks, Inc. <info@rangenetworks.com>
+Changed-By: Range Packager <buildmanager@rangenetworks.com>
+Description:
+ openbts    - Range Networks - OpenBTS GSM+GPRS Radio Access Network Node
+Changes:
+ openbts (5.0) unstable; urgency=low
+ .
+     * Test
+Checksums-Sha1:
+ e39a297f1432e301d2381d2ecbbb1aa81bc2fa12 720 openbts_5.0.dsc
+ 788a4591630ec596ed65e5ea60d56c8ddbb551df 12046789 openbts_5.0.tar.gz
+ 58f725030a07356f35b44042ccf1cd1f4a0057c5 9717286 openbts_5.0_amd64.deb
+Checksums-Sha256:
+ 6a915808e7d998b5debb5b35ef31840971534ca36906f6b15be4adc6344a59c2 720 openbts_5.0.dsc
+ 5b38da61ee2ea3e77c9c62739d5d6602492b03765ead4fa1307c0ce0c97dce3f 12046789 openbts_5.0.tar.gz
+ 1efd1c27f980ba692f6db3291e8ca9b94f9f29faeb6cb5008caaada8d4ba04d1 9717286 openbts_5.0_amd64.deb
+Files:
+ b7511282bf0046d9e428fb883df60ef4 720 comm optional openbts_5.0.dsc
+ ec0f01cd885764b23e1159f79e6a7e0c 12046789 comm optional openbts_5.0.tar.gz
+ 0bd0cf20d47dff8f8786b78845d3b2b7 9717286 comm optional openbts_5.0_amd64.deb

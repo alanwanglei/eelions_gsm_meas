@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Wed, 13 Oct 2014 12:42:00 -0700
+Source: smqueue
+Binary: smqueue
+Architecture: source amd64
+Version: 5.0
+Distribution: untested
+Urgency: low
+Maintainer: Range Networks, Inc. <info@rangenetworks.com>
+Changed-By: Range Packager <buildmeister@rangenetworks.com>
+Description:
+ smqueue    - Range Networks - SMQueue RFC-3428 Store and Forward Server
+Changes:
+ smqueue (5.0) untested; urgency=low
+ .
+     * Test
+Checksums-Sha1:
+ a305e0db554e0cceb4a9ad8b9d02f878400dffe5 654 smqueue_5.0.dsc
+ 9d5edd775ed0fea0c2878356e3c3a0b85fae952e 7831554 smqueue_5.0.tar.gz
+ 9622ee016b56b457eaad2aa5afc117f4981460cf 1709392 smqueue_5.0_amd64.deb
+Checksums-Sha256:
+ 36464634f43476fc5038024e547e6cd53b55e2fb3de9730831b2502812e4ac3e 654 smqueue_5.0.dsc
+ e1ff159a424935a62ef0a8ac39327b619ea5325104729e9034bd3f1ba52ef3d0 7831554 smqueue_5.0.tar.gz
+ f4cebeeb45c09166ab40b2702ae04f78ed74e1dc165f923892914b2955749628 1709392 smqueue_5.0_amd64.deb
+Files:
+ 2708b947f248af4efc2ef3337c0db55d 654 comm optional smqueue_5.0.dsc
+ f299e98fb6f954d298c8444f15dda8a6 7831554 comm optional smqueue_5.0.tar.gz
+ 9a7f5cb0a26164a64601e9bbab0c37a4 1709392 comm optional smqueue_5.0_amd64.deb

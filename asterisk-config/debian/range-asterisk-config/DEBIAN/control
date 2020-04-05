@@ -1,0 +1,11 @@
+Package: range-asterisk-config
+Version: 5.0
+Architecture: all
+Essential: no
+Maintainer: Range Networks, Inc. <info@rangenetworks.com>
+Installed-Size: 208
+Replaces: asterisk-config (<< 1:10.9.0), odbcinst
+Section: comm
+Priority: optional
+Homepage: http://www.rangenetworks.com/
+Description: Range Networks - Default Asterisk Configuration

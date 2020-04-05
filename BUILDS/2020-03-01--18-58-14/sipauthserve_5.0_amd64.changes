@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Thu, 25 Sep 2014 00:17:42 -0700
+Source: sipauthserve
+Binary: sipauthserve
+Architecture: source amd64
+Version: 5.0
+Distribution: unstable
+Urgency: low
+Maintainer: Range Networks, Inc. <info@rangenetworks.com>
+Changed-By: Range Packager <buildmeister@rangenetworks.com>
+Description:
+ sipauthserve - Range Networks - SIP Authorization Server
+Changes:
+ sipauthserve (5.0) unstable; urgency=low
+ .
+     * Test
+Checksums-Sha1:
+ 1843ac77b3fbfe22304520163ee2ad4b6c2ffed1 684 sipauthserve_5.0.dsc
+ d41d278adb46c2a86631f35acbe132fff27b861d 4404869 sipauthserve_5.0.tar.gz
+ 9126698a2fb2da0560e13101851696916f3b9c64 1129070 sipauthserve_5.0_amd64.deb
+Checksums-Sha256:
+ a18c4ff2904f44ac399a95100ce4ea55996709bc9964eb807fa2eae1e444dc41 684 sipauthserve_5.0.dsc
+ b9114f82f319dbdb9a00c9018ca8d1213699237f13930ee3c23122fa0b36dceb 4404869 sipauthserve_5.0.tar.gz
+ 66e336375ad09b6a9f2258a7e821c775e2fd83a6b9c6383e6818d135d04b8cfc 1129070 sipauthserve_5.0_amd64.deb
+Files:
+ cecd131396b83053872f2dc4bfb78e17 684 comm optional sipauthserve_5.0.dsc
+ f5d0d313699671e87c8ca89fb444decc 4404869 comm optional sipauthserve_5.0.tar.gz
+ 607261e82ff6fcebb2d653e45ba39fbf 1129070 comm optional sipauthserve_5.0_amd64.deb

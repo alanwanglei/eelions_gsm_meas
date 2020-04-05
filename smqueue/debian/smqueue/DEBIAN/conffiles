@@ -1,0 +1,2 @@
+/etc/OpenBTS/smqueue.example.sql
+/etc/init/smqueue.conf

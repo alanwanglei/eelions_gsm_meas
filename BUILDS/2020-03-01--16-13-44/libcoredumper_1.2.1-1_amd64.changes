@@ -1,0 +1,32 @@
+Format: 1.8
+Date: Fri,  4 Apr 2008 09:41:51 -0800
+Source: libcoredumper
+Binary: libcoredumper-dev libcoredumper1
+Architecture: source amd64
+Version: 1.2.1-1
+Distribution: unstable
+Urgency: low
+Maintainer: Google Inc. <opensource@google.com>
+Changed-By: Google Inc. <opensource@google.com>
+Description:
+ libcoredumper-dev - library for generating on-the-fly snapshot core files
+ libcoredumper1 - library for generating on-the-fly snapshot core files
+Changes:
+ libcoredumper (1.2.1-1) unstable; urgency=low
+ .
+   * Upgraded to version 1.2.1.
+Checksums-Sha1:
+ 932402a7c5549e51d54140eeb3cbdcc090a9538a 628 libcoredumper_1.2.1-1.dsc
+ a483ae2b688c21986875c6da7c693d9e7708001c 447968 libcoredumper_1.2.1-1.tar.gz
+ 24c576d88d56713335145ca496ef130297dcac3d 41172 libcoredumper-dev_1.2.1-1_amd64.deb
+ a4f1f400e00b22f47da6caa661e9613eb5e7b8c2 18996 libcoredumper1_1.2.1-1_amd64.deb
+Checksums-Sha256:
+ c510eb779ed750c9faa46161d0ba1b108a799b242155da41be153e738ddf6e1e 628 libcoredumper_1.2.1-1.dsc
+ 77be41481bd3708344d74bf30a26724f5277a0e30bbc2dad167713113b14188d 447968 libcoredumper_1.2.1-1.tar.gz
+ b656a4e523e1a1d3edcd2eae4df6ebb3cbd3bf8d82ef151f2a5fa8fa7a17ac89 41172 libcoredumper-dev_1.2.1-1_amd64.deb
+ c41b0fd2fa9a86bb0be3d647001c663a0af2a32802f8662d2ab84d349af38231 18996 libcoredumper1_1.2.1-1_amd64.deb
+Files:
+ b95f842f7fe5812661d29a2140ee5c06 628 - optional libcoredumper_1.2.1-1.dsc
+ d29eb45772602b9223738b9af5c55d1c 447968 - optional libcoredumper_1.2.1-1.tar.gz
+ c4df81d2ac1f44e0434c5a697862751a 41172 libdevel optional libcoredumper-dev_1.2.1-1_amd64.deb
+ 9981fe79261ac07dad0a4168e55ed582 18996 libs optional libcoredumper1_1.2.1-1_amd64.deb

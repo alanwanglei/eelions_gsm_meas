@@ -1,0 +1,77 @@
+make  all-recursive
+make[1]: Entering directory '/home/eelions/dev/openbts'
+Making all in config
+make[2]: Entering directory '/home/eelions/dev/openbts/config'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/config'
+Making all in CommonLibs
+make[2]: Entering directory '/home/eelions/dev/openbts/CommonLibs'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/CommonLibs'
+Making all in Globals
+make[2]: Entering directory '/home/eelions/dev/openbts/Globals'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/Globals'
+Making all in SIP
+make[2]: Entering directory '/home/eelions/dev/openbts/SIP'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/SIP'
+Making all in GSM
+make[2]: Entering directory '/home/eelions/dev/openbts/GSM'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/GSM'
+Making all in SMS
+make[2]: Entering directory '/home/eelions/dev/openbts/SMS'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/SMS'
+Making all in Scanning
+make[2]: Entering directory '/home/eelions/dev/openbts/Scanning'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/Scanning'
+Making all in TRXManager
+make[2]: Entering directory '/home/eelions/dev/openbts/TRXManager'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/TRXManager'
+Making all in Control
+make[2]: Entering directory '/home/eelions/dev/openbts/Control'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/Control'
+Making all in Peering
+make[2]: Entering directory '/home/eelions/dev/openbts/Peering'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/Peering'
+Making all in NodeManager
+make[2]: Entering directory '/home/eelions/dev/openbts/NodeManager'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/NodeManager'
+Making all in GPRS
+make[2]: Entering directory '/home/eelions/dev/openbts/GPRS'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/GPRS'
+Making all in SGSNGGSN
+make[2]: Entering directory '/home/eelions/dev/openbts/SGSNGGSN'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/SGSNGGSN'
+Making all in CLI
+make[2]: Entering directory '/home/eelions/dev/openbts/CLI'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/CLI'
+Making all in GSMShare
+make[2]: Entering directory '/home/eelions/dev/openbts/GSMShare'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/GSMShare'
+Making all in apps
+make[2]: Entering directory '/home/eelions/dev/openbts/apps'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/apps'
+Making all in doc
+make[2]: Entering directory '/home/eelions/dev/openbts/doc'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/doc'
+Making all in Transceiver52M
+make[2]: Entering directory '/home/eelions/dev/openbts/Transceiver52M'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eelions/dev/openbts/Transceiver52M'
+make[2]: Entering directory '/home/eelions/dev/openbts'
+make[2]: Leaving directory '/home/eelions/dev/openbts'
+make[1]: Leaving directory '/home/eelions/dev/openbts'

@@ -1,0 +1,12 @@
+Package: range-configs
+Version: 5.1-master
+Architecture: all
+Essential: no
+Maintainer: Range Networks, Inc. <info@rangenetworks.com>
+Installed-Size: 17
+Depends: ntp, ntpdate, bind9, resolvconf
+Replaces: bind9 (<< 1:9.8.1)
+Section: comm
+Priority: optional
+Homepage: http://www.rangenetworks.com/
+Description: Range Networks - Misc Default Configurations

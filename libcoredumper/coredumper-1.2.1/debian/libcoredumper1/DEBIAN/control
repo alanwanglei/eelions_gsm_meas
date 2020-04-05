@@ -1,0 +1,14 @@
+Package: libcoredumper1
+Source: libcoredumper
+Version: 1.2.1-1
+Architecture: amd64
+Maintainer: Google Inc. <opensource@google.com>
+Installed-Size: 54
+Depends: libc6 (>= 2.14)
+Section: libs
+Priority: optional
+Description: library for generating on-the-fly snapshot core files
+ Libcoredumper can be compiled into applications to create core dumps of
+ the running program, without having to terminate them. It supports both
+ single and multi-threaded core dumps, even if the kernel does not have
+ native support for multi-threaded core files.
