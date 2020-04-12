@@ -61,176 +61,16 @@ static char *progname = (char*) "";
 char target[64] = "127.0.0.1";
 int port = 49300;
 
-// wanglei add
-typedef enum
-{
-	CFG_CMD_POWEROFF   = 0,
-	CFG_CMD_BAND,
-	CFG_CMD_MCC,
-	CFG_CMD_MNC,
-	CFG_CMD_CI,
-	CFG_CMD_LAC,
-	CFG_CMD_RAC,
-	CFG_CMD_NCC,
-	CFG_CMD_BCC,
-	CFG_CMD_MSPWRMAX,
-	CFG_CMD_POWERON,
-} CFG_CMD_ENUM;
-
-typedef struct
-{
-	int		ncc;
-	int		bcc;
-	int		mcc;
-	int 		mnc;
-	int		ci;
-	int		lac;
-	int		rac;
-	int		band;
-	int		start;
-} config_stru;
-
-char *up_trim(char *str)
-{
-	int i, index = 0;
-	for(i = 0; ; i++){
-		if(str[i] == ' ') continue;
-		if(str[i] == 0) break;
-		str[index] = tolower(str[i]);
-		index ++;
-	}
-	str[index] = 0;
-	return str;
-}
-
-void print_cfg(config_stru cfg)
-{
-//	printf("CFG:%d,%d,%d,%d,%d,%d,%d,%d,%d\n", cfg.ncc, cfg.bcc, cfg.mcc, cfg.mnc, cfg.ci, cfg.lac, cfg.rac, cfg.band, cfg.start);
-}
-
-void parse_cfg(config_stru *cfg, char *str)
-{
-	int val;
-	char *str_val;
-	
-	up_trim(str);
-	str_val = strchr(str, '=');
-	if(str_val == NULL) return;
-	str_val++;
-	val = atoi(str_val);
-	if(strncmp(str, "ncc", 3) == 0) {
-		cfg->ncc = val;
-	}
-	else if(strncmp(str, "bcc", 3) == 0) {
-		cfg->bcc = val;
-	}
-	else if(strncmp(str, "mcc", 3) == 0) {
-		cfg->mcc = val;
-	}
-	else if(strncmp(str, "mnc", 3) == 0) {
-		cfg->mnc = val;
-	}
-	else if(strncmp(str, "ci", 2) == 0) {
-		cfg->ci = val;
-	}
-	else if(strncmp(str, "lac", 3) == 0) {
-		cfg->lac = val;
-	}
-	else if(strncmp(str, "rac", 3) == 0) {
-		cfg->rac = val;
-	}
-	else if(strncmp(str, "band", 4) == 0) {
-		cfg->band = val;
-	}
-	else if(strncmp(str, "start", 5) == 0) {
-		cfg->start = val;
-	}
-}
-
-char *read_cfg_file()
-{
-	static int do_cmd_index = 0;
-	static char str[1024];
-	static config_stru cfg;
-
-	if(do_cmd_index == 0) {
-		// read file
-		FILE *fp;
-		fp = fopen("/OpenBTS/log/config", "rt");
-		if(fp == NULL)
-		{
-			sleep(1);
-			return NULL;
-		}
-		memset(&cfg, 0, sizeof(cfg));
-		while(1) {
-			memset(str, 0, sizeof(str));
-			if(NULL == fgets(str, sizeof(str)-1, fp)) break;
-			parse_cfg(&cfg, str);
-		}
-		fclose(fp);
-	}
-
-	// check start field
-	memset(str, 0, sizeof(str));
-	if(cfg.start) {
-		print_cfg(cfg);
-		switch(do_cmd_index){
-		case CFG_CMD_POWEROFF:
-			sprintf(str, "power 80 80");
-			break;
-		case CFG_CMD_BAND:
-			sprintf(str, "config GSM.Radio.Band 900");
-			break;
-		case CFG_CMD_MCC:
-			sprintf(str, "config GSM.Identity.MCC %d", cfg.mcc);
-			break;
-		case CFG_CMD_MNC:
-			sprintf(str, "config GSM.Identity.MNC %d", cfg.mnc);
-			break;
-		case CFG_CMD_CI:
-			sprintf(str, "config GSM.Identity.CI %d", cfg.ci);
-			break;
-		case CFG_CMD_LAC:
-			sprintf(str, "config GSM.Identity.LAC %d", cfg.lac);
-			break;
-		case CFG_CMD_RAC:
-			sprintf(str, "config GPRS.RAC %d", cfg.rac);
-			break;
-		case CFG_CMD_BCC:
-			sprintf(str, "config GSM.Identity.BSIC.BCC %d", cfg.bcc);
-			break;
-		case CFG_CMD_NCC:
-			sprintf(str, "config GSM.Identity.BSIC.NCC %d", cfg.ncc);
-			break;
-		case CFG_CMD_MSPWRMAX:
-			sprintf(str, "config GSM.MS.Power.Max 39");
-			break;
-		case CFG_CMD_POWERON:
-			sprintf(str, "power 0 10");
-			break;
-		default:
-			printf("Delete config file /OpenBTS/log/config");
-			remove("/OpenBTS/log/config");
-			cfg.start = 0;
-			do_cmd_index = 0;
-			return NULL;
-		}
-
-		do_cmd_index ++;
-	}
-
-	return str;
-}
-// wanglei add end
-
 static void banner()
 {
 	static int bannerPrinted = false;
 	if (bannerPrinted) return;
 	bannerPrinted = true;
-	printf("Run GSM measure\n");
+	printf("OpenBTS Command Line Interface (CLI) utility\n");
+	printf("Copyright 2012, 2013, 2014 Range Networks, Inc.\n");
+	printf("Licensed under GPLv2.\n");
 #ifdef HAVE_LIBREADLINE
+	printf("Includes libreadline, GPLv2.\n");
 #endif
 }
 
@@ -456,7 +296,7 @@ int main(int argc, char *argv[])
 
 
 	if (!isBTSDo)
-	    printf("Remote Interface Ready.\n");
+	    printf("Remote Interface Ready.\nType:\n \"help\" to see commands,\n \"version\" for version information,\n \"notices\" for licensing information,\n \"quit\" to exit console interface.\n");
 
 
         if (sCommand.c_str()[0] != '\0') {
@@ -465,8 +305,7 @@ int main(int argc, char *argv[])
             while (1)
             {
 #ifdef HAVE_LIBREADLINE
-//                char *cmd = readline(isBTSDo ? NULL : prompt);
-                char *cmd = read_cfg_file();
+                char *cmd = readline(isBTSDo ? NULL : prompt);
                 if (!cmd) continue;
                         if (cmd[0] == '\0') continue;
                 if (!isBTSDo)
@@ -478,8 +317,7 @@ int main(int argc, char *argv[])
                     fflush(stdout);
                 }
                 char *inbuf = (char*)malloc(BUFSIZ);
-                char *cmd = read_cfg_file();
-//                char *cmd = fgets(inbuf,BUFSIZ-1,stdin);
+                char *cmd = fgets(inbuf,BUFSIZ-1,stdin);
                 if (!cmd)
                 {
                     if (isBTSDo)
@@ -490,7 +328,6 @@ int main(int argc, char *argv[])
                 // strip trailing CR
                 cmd[strlen(cmd)-1] = '\0';
 #endif
-printf("COMMAND: %s\n", cmd);
                 if (!isBTSDo)
                 {
                     // local quit?
@@ -541,7 +378,7 @@ printf("COMMAND: %s\n", cmd);
                         //}
                     }
                 }
-//                free(cmd);
+                free(cmd);
                 if (isBTSDo)
                     break;
             }
