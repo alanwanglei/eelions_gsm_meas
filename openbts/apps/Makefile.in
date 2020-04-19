@@ -133,7 +133,7 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 noinst_PROGRAMS = JSONEventsClient$(EXEEXT) OpenBTS$(EXEEXT) \
-	OpenBTSCLI$(EXEEXT)
+	OpenBTSCLI$(EXEEXT) GSMMeas$(EXEEXT)
 subdir = apps
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/ax_check_compile_flag.m4 \
@@ -214,9 +214,9 @@ am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(JSONEventsClient_SOURCES) $(OpenBTS_SOURCES) \
-	$(OpenBTSCLI_SOURCES)
+	$(OpenBTSCLI_SOURCES) $(GSMMeas_SOURCES)
 DIST_SOURCES = $(JSONEventsClient_SOURCES) $(OpenBTS_SOURCES) \
-	$(OpenBTSCLI_SOURCES)
+	$(OpenBTSCLI_SOURCES) $(GSMMeas_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -488,6 +488,8 @@ EXTRA_DIST = \
 	importConfigTable.sh \
 	generateTeX.sh
 
+GSMMeas_SOURCES = GSMMeas.cpp
+
 all: all-am
 
 .SUFFIXES:
@@ -543,6 +545,10 @@ OpenBTS$(EXEEXT): $(OpenBTS_OBJECTS) $(OpenBTS_DEPENDENCIES) $(EXTRA_OpenBTS_DEP
 OpenBTSCLI$(EXEEXT): $(OpenBTSCLI_OBJECTS) $(OpenBTSCLI_DEPENDENCIES) $(EXTRA_OpenBTSCLI_DEPENDENCIES) 
 	@rm -f OpenBTSCLI$(EXEEXT)
 	$(AM_V_CXXLD)$(OpenBTSCLI_LINK) $(OpenBTSCLI_OBJECTS) $(OpenBTSCLI_LDADD) $(LIBS)
+
+GSMMeas$(EXEEXT): $(GSMMeas_OBJECTS) $(OpenBTSCLI_DEPENDENCIES) $(EXTRA_OpenBTSCLI_DEPENDENCIES) 
+	@rm -f GSMMeas$(EXEEXT)
+	$(AM_V_CXXLD)$(OpenBTSCLI_LINK) $(GSMMeas_OBJECTS) $(OpenBTSCLI_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

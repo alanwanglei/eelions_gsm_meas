@@ -133,7 +133,7 @@ build_triplet = x86_64-pc-linux-gnu
 host_triplet = x86_64-pc-linux-gnu
 target_triplet = x86_64-pc-linux-gnu
 noinst_PROGRAMS = JSONEventsClient$(EXEEXT) OpenBTS$(EXEEXT) \
-	OpenBTSCLI$(EXEEXT)
+	OpenBTSCLI$(EXEEXT) GSMMeas$(EXEEXT)
 subdir = apps
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/ax_check_compile_flag.m4 \
@@ -179,6 +179,14 @@ OpenBTSCLI_DEPENDENCIES = $(clilibs)
 OpenBTSCLI_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(OpenBTSCLI_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_GSMMeas_OBJECTS = GSMMeas-GSMMeas.$(OBJEXT)
+GSMMeas_OBJECTS = $(am_GSMMeas_OBJECTS)
+GSMMeas_DEPENDENCIES = $(clilibs)
+GSMMeas_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(OpenBTSCLI_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+
+
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -214,9 +222,9 @@ am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(JSONEventsClient_SOURCES) $(OpenBTS_SOURCES) \
-	$(OpenBTSCLI_SOURCES)
+	$(OpenBTSCLI_SOURCES) $(GSMMeas_SOURCES)
 DIST_SOURCES = $(JSONEventsClient_SOURCES) $(OpenBTS_SOURCES) \
-	$(OpenBTSCLI_SOURCES)
+	$(OpenBTSCLI_SOURCES) $(GSMMeas_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -488,6 +496,8 @@ EXTRA_DIST = \
 	importConfigTable.sh \
 	generateTeX.sh
 
+GSMMeas_SOURCES = GSMMeas.cpp
+
 all: all-am
 
 .SUFFIXES:
@@ -544,6 +554,10 @@ OpenBTSCLI$(EXEEXT): $(OpenBTSCLI_OBJECTS) $(OpenBTSCLI_DEPENDENCIES) $(EXTRA_Op
 	@rm -f OpenBTSCLI$(EXEEXT)
 	$(AM_V_CXXLD)$(OpenBTSCLI_LINK) $(OpenBTSCLI_OBJECTS) $(OpenBTSCLI_LDADD) $(LIBS)
 
+GSMMeas$(EXEEXT): $(GSMMeas_OBJECTS) $(GSMMeas_DEPENDENCIES) $(EXTRA_OpenBTSCLI_DEPENDENCIES) 
+	@rm -f GSMMeas$(EXEEXT)
+	$(AM_V_CXXLD)$(GSMMeas_LINK) $(GSMMeas_OBJECTS) $(OpenBTSCLI_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -589,6 +603,14 @@ OpenBTSCLI-OpenBTSCLI.obj: OpenBTSCLI.cpp
 #	$(AM_V_CXX)source='OpenBTSCLI.cpp' object='OpenBTSCLI-OpenBTSCLI.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(OpenBTSCLI_CXXFLAGS) $(CXXFLAGS) -c -o OpenBTSCLI-OpenBTSCLI.obj `if test -f 'OpenBTSCLI.cpp'; then $(CYGPATH_W) 'OpenBTSCLI.cpp'; else $(CYGPATH_W) '$(srcdir)/OpenBTSCLI.cpp'; fi`
+
+GSMMeas-GSMMeas.o: GSMMeas.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(OpenBTSCLI_CXXFLAGS) $(CXXFLAGS) -MT GSMMeas-GSMMeas.o -MD -MP -MF $(DEPDIR)/OpenBTSCLI-OpenBTSCLI.Tpo -c -o GSMMeas-GSMMeas.o `test -f 'GSMMeas.cpp' || echo '$(srcdir)/'`GSMMeas.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/OpenBTSCLI-OpenBTSCLI.Tpo $(DEPDIR)/OpenBTSCLI-OpenBTSCLI.Po
+
+GSMMeas-GSMMeas.obj: GSMMeas.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(OpenBTSCLI_CXXFLAGS) $(CXXFLAGS) -MT GSMMeas-GSMMeas.obj -MD -MP -MF $(DEPDIR)/OpenBTSCLI-OpenBTSCLI.Tpo -c -o GSMMeas-GSMMeas.obj `if test -f 'GSMMeas.cpp'; then $(CYGPATH_W) 'GSMMeas.cpp'; else $(CYGPATH_W) '$(srcdir)/GSMMeas.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/OpenBTSCLI-OpenBTSCLI.Tpo $(DEPDIR)/OpenBTSCLI-OpenBTSCLI.Po
 
 mostlyclean-libtool:
 	-rm -f *.lo
