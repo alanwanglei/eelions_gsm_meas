@@ -29,13 +29,15 @@
 
 #include "Globals.h"
 
+char *g_logfile = "/OpenBTS/log/GSMMeas.log";
+
 //////////////////////////////////////
 // socket defines
 //    _o: for OpenBTS
 //    _g: for GUI
 //////////////////////////////////////
 struct sockaddr_in sa_o, sa_g;
-int sock_o = -1, sock_g = -1;
+int sock_o = -1, sock_gl = -1, sock_g = -1;
 char target_o[64] = "127.0.0.1", target_g[64] = "127.0.0.1";
 int port_o = 49300, port_g = 34567;
 
@@ -44,6 +46,8 @@ static char *progname = (char*) "";
 const int bufsz = 100000;
 char cmdbuf[bufsz];
 char resbuf[bufsz];
+
+bool isConnGUI = true; // true: listening socket for GUI. false: read config from files
 
 //////////////////////////////////////
 // function define
@@ -57,8 +61,6 @@ bool connect_gui();
 		printf("Error: command \"%s\" failed.\n", cmd); \
 		exit(1); }
 
-
-// wanglei add
 typedef enum
 {
 	CFG_CMD_POWEROFF   = 0,
@@ -74,6 +76,56 @@ typedef enum
 	CFG_CMD_POWERON,
 } CFG_CMD_ENUM;
 
+typedef enum
+{
+	GUI_CMD_TYPE_CONFIG		= 1,
+	GUI_CMD_TYPE_START_BER		= 2,
+	GUI_CMD_TYPE_ACK		= 101,
+	GUI_CMD_TYPE_BER_RESULT		= 102,
+} GUI_CMD_ENUM;
+
+typedef struct
+{
+	int		ncc;
+	int		bcc;
+	int		mcc;
+	int		mnc;
+	int		ci;
+	int		lac;
+	int 		rac;
+	int		band;
+	int		arfcn;
+} GUI_CMD_T_CONFIG;
+
+typedef struct
+{
+	int		power;
+} GUI_CMD_T_START_BER;
+
+typedef struct
+{
+	int		ret;
+} GUI_CMD_T_ACK;
+
+typedef struct
+{
+	float 		ber;
+	float		dl_rssi;
+} GUI_CMD_T_BER_RESULT;
+
+typedef struct
+{
+	int			len;
+	GUI_CMD_ENUM		type;
+	union
+	{
+	GUI_CMD_T_CONFIG	cmd_config;
+	GUI_CMD_T_START_BER	cmd_start_ber;
+	GUI_CMD_T_ACK		cmd_ack;
+	GUI_CMD_T_BER_RESULT	cmd_ber_result;
+	};
+} GUI_CMD_PKG;
+
 typedef struct
 {
 	int		ncc;
@@ -86,6 +138,61 @@ typedef struct
 	int		band;
 	int		start;
 } config_stru;
+
+/////////////////////////////////////////////////////////////
+// function define
+/////////////////////////////////////////////////////////////
+void proc_meas_ber(GUI_CMD_T_START_BER *cmd, GUI_CMD_T_BER_RESULT *res);
+
+
+void print2log_clear()
+{
+	FILE *fp;
+	fp = fopen(g_logfile, "wt");
+	if(fp != NULL) fclose(fp);
+}
+
+void print2log(char *str)
+{
+	FILE *fp;
+	fp = fopen(g_logfile, "at");
+	if(fp == NULL) return;
+	fwrite(str, strlen(str), 1, fp);
+	fclose(fp);
+}
+
+bool create_gui()
+{
+	sock_gl = socket(AF_INET, SOCK_STREAM, 0);
+	if(sock_gl == -1)
+	{
+		printf("create listening socket failed.\n");
+		return false;
+	}
+
+	sa_g.sin_family = AF_INET;
+	sa_g.sin_addr.s_addr = htonl(INADDR_ANY);
+	sa_g.sin_port = htons(23000);
+	bind(sock_gl, (struct sockaddr *)&sa_g, sizeof(sa_g));
+
+	if(listen(sock_gl, 1) != 0)
+	{
+		printf("listen GUI socket failed. err=%d\n", errno);
+		return false;
+	}
+	return true;
+}
+
+bool connect_gui()
+{
+	sock_g = accept(sock_gl, (struct sockaddr*)NULL, NULL);
+	if(sock_g == -1)
+	{
+		printf("accept GUI socket failed. err=%d\n", errno);
+		return false;
+	}
+	return true;
+}
 
 bool connect_openbts()
 {
@@ -119,6 +226,91 @@ bool connect_openbts()
 	}
 
 	return true;
+}
+
+bool get_guicmd(GUI_CMD_PKG *cmd)
+{
+	int nread = 0;
+
+	nread = recv(sock_g, &(cmd->len), sizeof(cmd->len), 0);
+	if (nread <= 0)
+	{
+		perror("receive GUI command failed.\n");
+		return false;
+	}
+	if (nread == 0)
+	{
+		printf("GUI connection closed\n");
+		return false;
+	}
+	if (nread != (int) sizeof(cmd->len))
+	{
+		printf("Partial read of length from GUI, expected %d, got %d\n", (int)sizeof(cmd->len), (int)nread);
+		return false;
+	}
+	if (cmd->len > (int)(sizeof(*cmd)-sizeof(cmd->len)))
+	{
+		printf("receive GUI command is too long. len=%d\n", cmd->len);
+		return false;
+	}
+
+	nread = recv(sock_g, ((char*)cmd)+sizeof(cmd->len), cmd->len, 0);
+	if(nread != cmd->len)
+	{
+		printf("receive GUI command failed. len=%d, got %d", cmd->len, (int)nread);
+		return false;
+	}
+	//printf("recv GUI: len=%d:%d, type=%d\n", sizeof(cmd->len)+cmd->len, cmd->len, cmd->type);
+	return true;
+
+}
+
+bool send_gui(GUI_CMD_PKG *cmd)
+{
+	int len;
+	if(sock_g == -1 && cmd == NULL) return false;
+
+	cmd->len = sizeof(cmd->type);
+	switch(cmd->type)
+	{
+	case GUI_CMD_TYPE_CONFIG:	cmd->len += sizeof(GUI_CMD_T_CONFIG); break;
+	case GUI_CMD_TYPE_START_BER:	cmd->len += sizeof(GUI_CMD_T_START_BER); break;
+	case GUI_CMD_TYPE_ACK:		cmd->len += sizeof(GUI_CMD_T_ACK); break;
+	case GUI_CMD_TYPE_BER_RESULT:	cmd->len += sizeof(GUI_CMD_T_BER_RESULT); break;
+	default: printf("send GUI command error. type=%d\n", cmd->type); return false;
+	}
+	len = sizeof(cmd->len) + cmd->len;
+
+	if (send(sock_g, cmd, len, 0) < 0)
+	{
+		printf("send command to GUI failed. type=%d, len=%d\n", cmd->type, len);
+		return false;
+	}
+	//printf("send GUI: len=%d:%d, type=%d\n", len, cmd->len, cmd->type);
+	return true;
+}
+
+bool proc_guicmd(GUI_CMD_PKG *cmd)
+{
+	GUI_CMD_PKG res;
+
+	memset(&res, 0, sizeof(res));
+
+	switch(cmd->type)
+	{
+	case GUI_CMD_TYPE_CONFIG:
+		res.type = GUI_CMD_TYPE_ACK;
+		res.cmd_ack.ret		= 0;
+		break;
+	case GUI_CMD_TYPE_START_BER:
+		proc_meas_ber(&cmd->cmd_start_ber, &res.cmd_ber_result);
+		res.type = GUI_CMD_TYPE_BER_RESULT;
+		break;
+	default:
+		return false;
+	}
+
+	return send_gui(&res);
 }
 
 char *up_trim(char *str)
@@ -262,19 +454,19 @@ void proc_init()
 	sleep(1);
 }
 
-void proc_meas_ber(int txpwr)
+void proc_meas_ber(GUI_CMD_T_START_BER *cmd, GUI_CMD_T_BER_RESULT *res)
 {
 	char * str;
 	int tid;
 	float ul_ber, dl_ber, dl_rssi, ul_pwr;
 	char search_str[1024];
 
-	printf("BER measure with power %d\n", 80-txpwr);
+	printf("BER measure with power %d\n", cmd->power);
 
 	// restart BTS
 //	DO_CMD("power 80 80");
 //	DO_CMD("shutdown 1");
-	sprintf(cmdbuf, "power %d %d", txpwr, txpwr);
+	sprintf(cmdbuf, "power %d %d", 80-cmd->power, 80-cmd->power);
 	DO_CMD(cmdbuf);
 
 while(1) {
@@ -294,24 +486,35 @@ while(1) {
 		}
 
 		tid = atoi(str+1);
-		printf("Found call tid=%d, txpower=%d\n", tid, 80-txpwr);
+		printf("Found call tid=%d, txpower=%d\n", tid, cmd->power);
 		break;
 	}
 
-	// hold call about 5s
-	sleep(20);
+	// hold call
+	print2log("################################\n");
+	for(int i = 0; i < 20; i ++)
+	{
+		sleep(1);
 
-	// get BER
-	DO_CMD("chans -a -l -tab");
+		// get BER
+		DO_CMD("chans -a -l -tab");
+		print2log("--------------------------------\n");
+		print2log(resbuf);
+		print2log("\n");
+	}
+
 	sprintf(search_str, "TCH/F\tT%d\tLinkEstablished\tfalse\t", tid);
 	str = strstr(resbuf, search_str);
 	if(str == NULL) {
-		printf("Error: Can't get channel informations: txpower=%d\n", 80-txpwr);
-		printf("Retry BER measure with power %d\n", 80-txpwr);
+		printf("Error: Can't get channel informations: txpower=%d\n", cmd->power);
+		printf("Retry BER measure with power %d\n", cmd->power);
 		continue;
 	}
-	str = str + strlen(search_str) + 1;
-	sscanf(str, "%*f\t%*f\t%*f\t%*f\t%*f\t%f\t%*f\t%f\t%*f\t%f\t%*f\t%f\t", &ul_ber, &dl_rssi, &ul_pwr, &dl_ber);
+	str = str + strlen(search_str);
+	sscanf(str, "%*f\t%*f\t%*f\t%*f\t%*f\t%f\t%*f\t%f\t%*f\t%f\t%f\t", &ul_ber, &dl_rssi, &ul_pwr, &dl_ber);
+	
+	res->ber 	= dl_ber;
+	res->dl_rssi 	= dl_rssi;
 break;
 }
 
@@ -323,9 +526,8 @@ break;
 		DO_CMD("calls");
 		if(strstr(resbuf, "0 transactions in table")) break;
 	}
-	printf("BER informations: PWR=%3d, UL_BER=%2.10f%%, DL_BER=%2.10f%%, UL_PWR=%2.1f, DL_RSSI=%2.1f\n", 80-txpwr, ul_ber, dl_ber, ul_pwr, dl_rssi);
+	printf("BER informations: PWR=%3d, UL_BER=%2.10f%%, DL_BER=%2.10f%%, UL_PWR=%2.1f, DL_RSSI=%2.1f\n", cmd->power, ul_ber, dl_ber, ul_pwr, dl_rssi);
 }
-// wanglei add end
 
 static void banner()
 {
@@ -394,13 +596,13 @@ bool doCmd(int fd, char *cmd) // return false to abort/exit
     if (strcmp("restart", cmd) == 0)
     {
         printf("OpenBTS has been shut down or restarted.\n");
-        printf("You will need to restart OpenBTSCLI after it restarts.\n");
+        printf("You will need to restart GSMMeas after it restarts.\n");
         return false;
     }
     if (strcmp("shutdown", cmd) == 0)
     {
         printf("OpenBTS has been shut down or restarted.\n");
-        printf("You will need to restart OpenBTSCLI after it restarts.\n");
+        printf("You will need to restart GSMMeas after it restarts.\n");
         return false;
     }
 //    printf("%s\n",resbuf);
@@ -412,15 +614,16 @@ bool doCmd(int fd, char *cmd) // return false to abort/exit
 
 int main(int argc, char *argv[])
 {
-	bool isBTSDo = false;	// If set, execute one command without prompting, then exit.
+	print2log_clear();
+
 	std::string sCommand("");
 	progname = argv[0];
 	argc--; argv++;			// Skip program name.
 	while(argc > 0) {
 		if (argv[0][0] == '-') {
 			switch(argv[0][1]) {
-				case 'd': // OpenBTSDo interface
-					isBTSDo = true;
+				case 'l': // read local config file, don't create socket for GUI interface
+					isConnGUI = false;
 					break;
 				case 'p': // TCP Port number
 					argc--, argv++;
@@ -448,95 +651,56 @@ int main(int argc, char *argv[])
 		printf("Connecting to %s:%d...\n", target_o, port_o);
 	}
 
-	char prompt[16] = "OpenBTS> ";
+	// create socket for GUI interface
+	if(isConnGUI) create_gui();
 
 	// connect OpenBTS
 	if(!connect_openbts()) exit(1);
 
-#ifdef HAVE_LIBREADLINE
-	char *history_name = 0;
-	if (!isBTSDo)
+	if(isConnGUI)
 	{
-	    // start console
-	    using_history();
+		while(1)
+		{
+			// connect GUI
+			if(!connect_gui()) continue;
 
-	    static const char * const history_file_name = "/.openbts_history";
-	    char *home_dir = getenv("HOME");
-
-	    if(home_dir) {
-		    size_t home_dir_len = strlen(home_dir);
-		    size_t history_file_len = strlen(history_file_name);
-		    size_t history_len = home_dir_len + history_file_len + 1;
-		    if(history_len > home_dir_len) {
-			    if(!(history_name = (char *)malloc(history_len))) {
-				    perror("malloc failed");
-				    exit(2);
-			    }
-			    memcpy(history_name, home_dir, home_dir_len);
-			    memcpy(history_name + home_dir_len, history_file_name,
-			       history_file_len + 1);
-			    read_history(history_name);
-		    }
-	    }
+			// command process
+			while(1)
+			{
+				GUI_CMD_PKG cmd;
+				memset(&cmd, 0, sizeof(cmd));
+				if(!get_guicmd(&cmd))
+				{
+					printf("get GUI command failed. close GUI socket...");
+					close(sock_g);
+					sock_g = -1;
+					break;
+				}
+				proc_guicmd(&cmd);
+			}
+		}
 	}
-#endif
+	else
+	{
+		printf("Initial ...\n");
+		proc_init();
 
-	printf("Initial ...\n");
-	proc_init();
-
-	printf("BER measure start\n");
-	for(int txpwr = 0; txpwr < 75; txpwr += 5) {
-		proc_meas_ber(txpwr);
+		printf("BER measure start\n");
+		for(int txpwr = 80; txpwr > 0; txpwr -= 5) {
+			GUI_CMD_PKG cmd, res;
+			cmd.cmd_start_ber.power = txpwr;
+			proc_meas_ber(&cmd.cmd_start_ber, &res.cmd_ber_result);
+		}
+		printf("BER measure finished\n");
 	}
-	printf("BER measure finished\n");
 
-	if (!isBTSDo)
-	    printf("Remote Interface Ready.\n");
-
-
-        if (sCommand.c_str()[0] != '\0') {
-                doCmd(sock_o, (char *)sCommand.c_str());
-        } else
-            while (1)
-            {
-#ifdef HAVE_LIBREADLINE
-//                char *cmd = readline(isBTSDo ? NULL : prompt);
+        while (1)
+        {
                 char *cmd = read_cfg_file();
                 if (!cmd) continue;
                         if (cmd[0] == '\0') continue;
-                if (!isBTSDo)
-                    if (*cmd) add_history(cmd);
-#endif
+
 printf("COMMAND: %s\n", cmd);
-                if (!isBTSDo)
-                {
-                    // local quit?
-                    if (strcmp(cmd,"quit")==0) {
-                        printf("closing remote console\n");
-                        break;
-                    }
-                            // shutdown via upstart
-                    if (strcmp(cmd,"shutdown")==0) {
-                        printf("terminating openbts\n");
-                        if (getuid() == 0)
-                            system("stop openbts");
-                        else
-                        {
-                            printf("If prompted, enter the password you use for sudo\n");
-                            system("sudo stop openbts");
-                        }
-                        break;
-                    }
-                    // shell escape?
-                    if (cmd[0]=='!') {
-                        int i = system(cmd+1);
-                        if (i < 0)
-                        {
-                            perror("system");
-                        }
-                        continue;
-                    }
-                }
                 char *pCmd = cmd;
                 while(isspace(*pCmd)) pCmd++; // skip leading whitespace
                 if (*pCmd)
@@ -550,8 +714,6 @@ printf("COMMAND: %s\n", cmd);
                             sd = true;
                         free(cmd);
                         //{
-                            if (isBTSDo)
-                                break;
                             if (sd)
                                 break;
                             continue;
@@ -559,25 +721,7 @@ printf("COMMAND: %s\n", cmd);
                     }
                 }
 //                free(cmd);
-                if (isBTSDo)
-                    break;
-            }
-
-#ifdef HAVE_LIBREADLINE
-	if (!isBTSDo)
-	{
-	    if(history_name)
-	    {
-		    int e = write_history(history_name);
-		    if(e) {
-			    fprintf(stderr, "error: history: %s\n", strerror(e));
-		    }
-		    free(history_name);
-		    history_name = 0;
-	    }
-	}
-#endif
-
+        }
 
 	close(sock_o);
 }
